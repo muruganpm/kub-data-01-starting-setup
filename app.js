@@ -36,6 +36,7 @@ app.post('/story', (req, res) => {
 });
 
 // Set up the server to listen on port 3000
-app.listen(3000, () => {
+app.listen(3000, '0.0.0.0', () => {
   console.log('Server is running on port 3000');
 });
+
