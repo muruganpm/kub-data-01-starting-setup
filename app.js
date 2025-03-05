@@ -2,14 +2,15 @@ const path = require('path');
 const fs = require('fs');
 
 const express = require('express');
-const bodyParser = require('body-parser');
 
 const app = express();
 
 const filePath = path.join(__dirname, 'story', 'text.txt');
 
-app.use(bodyParser.json());
+// Use the built-in express.json middleware to handle JSON requests
+app.use(express.json());
 
+// Route to get the story (read from text.txt)
 app.get('/story', (req, res) => {
   fs.readFile(filePath, (err, data) => {
     if (err) {
@@ -19,11 +20,13 @@ app.get('/story', (req, res) => {
   });
 });
 
+// Route to post a new story (append to text.txt)
 app.post('/story', (req, res) => {
   const newText = req.body.text;
   if (newText.trim().length === 0) {
     return res.status(422).json({ message: 'Text must not be empty!' });
   }
+
   fs.appendFile(filePath, newText + '\n', (err) => {
     if (err) {
       return res.status(500).json({ message: 'Storing the text failed.' });
@@ -32,4 +35,7 @@ app.post('/story', (req, res) => {
   });
 });
 
-app.listen(3000);
+// Set up the server to listen on port 3000
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
